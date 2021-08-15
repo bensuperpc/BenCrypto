@@ -18,16 +18,15 @@
 #                                                            #
 ##############################################################
 
-cmake_minimum_required(VERSION 3.11)
-project(bencrypto VERSION 0.0.2 LANGUAGES CXX)
+find_package(OpenSSL 1.1.1)
 
-set(CMAKE_MODULE_PATH
-    ${CMAKE_MODULE_PATH}
-    ${PROJECT_SOURCE_DIR}/cmake)
-
-add_library(bencrypto INTERFACE)
-target_include_directories(bencrypto INTERFACE .)
-
-
-include(ConfigureBoost)
-include(ConfigureOpenSSL)
+if (OPENSSL_FOUND)
+    include_directories( ${OPENSSL_INCLUDE_DIR})
+    #target_include_directories(${PROJECT_NAME} PUBLIC ${OPENSSL_INCLUDE_DIR})
+    link_directories(${OPENSSL_LIBRARIES})
+    #target_link_libraries(${CMAKE_PROJECT_NAME} PRIVATE ${OPENSSL_LIBRARIES})
+    message(STATUS "OPENSSL: FOUND")
+    message(STATUS "Found OpenSSL: ${OPENSSL_VERSION}")
+else()
+    message(STATUS "OPENSSL: NOT FOUND")
+endif()

@@ -18,16 +18,23 @@
 #                                                            #
 ##############################################################
 
-cmake_minimum_required(VERSION 3.11)
-project(bencrypto VERSION 0.0.2 LANGUAGES CXX)
+if (WIN32)
+    set(Boost_USE_STATIC_LIBS TRUE)
+    set(Boost_USE_MULTITHREADED TRUE)
+    set(Boost_USE_STATIC_RUNTIME FALSE)
+else ()
+    set(Boost_USE_STATIC_LIBS FALSE)
+    set(Boost_USE_MULTITHREADED TRUE)
+    set(Boost_USE_STATIC_RUNTIME FALSE)
+endif (WIN32)
 
-set(CMAKE_MODULE_PATH
-    ${CMAKE_MODULE_PATH}
-    ${PROJECT_SOURCE_DIR}/cmake)
+#find_package( Boost 1.72.0 COMPONENTS thread system fiber context program_options filesystem REQUIRED)
+find_package(Boost 1.67.0)
 
-add_library(bencrypto INTERFACE)
-target_include_directories(bencrypto INTERFACE .)
-
-
-include(ConfigureBoost)
-include(ConfigureOpenSSL)
+if(Boost_FOUND)
+    message(STATUS "Boost FOUND")
+    include_directories(${Boost_INCLUDE_DIRS})
+    link_directories(${Boost_LIBRARIES})
+else()
+    message(STATUS "Boost: NOT FOUND")
+endif()

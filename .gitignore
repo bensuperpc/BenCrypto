@@ -32,4 +32,8 @@
 *.app
 
 build/*
+build-*/*
 old/*
+
+dockcross-linux-*
+dockcross-windows-*
