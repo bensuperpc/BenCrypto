@@ -3,7 +3,7 @@ project(my_crypto VERSION 0.0.2 LANGUAGES CXX)
 
 add_subdirectory ("crypto")
 
-set(ENABLE_TESTING ON)
+option(ENABLE_TESTING ON)
 
 if (ENABLE_TESTING)
     enable_testing()
