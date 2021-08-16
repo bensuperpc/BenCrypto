@@ -36,6 +36,10 @@ https://github.com/bavlayan/Encrypt-Decrypt-with-OpenSSL---RSA
 
 //#include "openssl_rsa.h"
 
+extern "C" {
+#include "banned.h"
+};
+
 #define BUFFSIZE 16384
 
 namespace my {

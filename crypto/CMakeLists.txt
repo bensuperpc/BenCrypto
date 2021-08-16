@@ -27,3 +27,4 @@ set(CMAKE_MODULE_PATH
 
 add_library(bencrypto INTERFACE)
 target_include_directories(bencrypto INTERFACE .)
+target_include_directories(bencrypto INTERFACE utils)
