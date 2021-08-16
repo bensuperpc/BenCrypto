@@ -35,10 +35,10 @@
 #ifndef CRYPTO_CRC32_HPP_
 #define CRYPTO_CRC32_HPP_
 
-#if BOOST_VERSION >= 106700
+#if defined (__has_include) && (__has_include(<boost/crc.hpp>))
 #include <boost/crc.hpp>
 #else
-#warning "No boost (BOOST_VERSION variable) found, disable some function."
+#warning "No boost found, disable some function."
 #endif
 
 extern "C" {
@@ -46,15 +46,14 @@ extern "C" {
 };
 
 // intrinsics / prefetching
-#if defined (__has_include) && (__has_include(<xmmintrin.h>))
 #    if (__AVX2__ || __AVX__ || __SSE3__ || __SSE__)
-extern "C"
-{
 #include <xmmintrin.h>
-};
 #endif
+
+#if (__cplusplus >= 201703L)
+#include<string_view>
 #else
-#warning "Not include xmmintrin.h"
+#warning "No C++17, disable some function."
 #endif
 
 // defines __BYTE_ORDER as __LITTLE_ENDIAN or __BIG_ENDIAN
@@ -73,6 +72,8 @@ extern "C"
 namespace my {
 namespace crypto {
 
+#if (BOOST_VERSION >= 106200)
+#if (__cplusplus >= 201703L)
 /**
  * This function process CRC32 hash from string
  * @ingroup Crypto_CRC32
@@ -96,6 +97,8 @@ uint32_t CRC32_Boost(std::string_view my_string);
  * @see see also CRC32_Boost()
  */
 uint32_t JAMCRC_Boost(std::string_view my_string);
+#endif
+#endif
 
 /**
  * This function process CRC32 hash from void * const
@@ -593,7 +596,8 @@ extern const uint32_t
     Crc32Lookup[MaxSlice][256]; // extern is needed to keep compiler happy
 #endif
 
-#if BOOST_VERSION >= 106700
+#if (BOOST_VERSION >= 106200)
+#if (__cplusplus >= 201703L)
 uint32_t my::crypto::JAMCRC_Boost(std::string_view my_string) {
   boost::crc_32_type result;
   // ça c'est plus rapide que l'autre normalement pour le length. Ça donne le
@@ -625,6 +629,7 @@ uint32_t my::crypto::JAMCRC_Boost(const void *buf, size_t len, uint32_t crc) {
       reinterpret_cast<unsigned char *>(const_cast<void *>(buf)), len);
   return result.checksum();
 }
+#endif
 #endif
 
 uint32_t my::crypto::CRC32_StackOverflow(const void *buf, size_t len,
